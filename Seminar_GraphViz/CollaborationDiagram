@@ -1,0 +1,26 @@
+digraph CollaborationDiagram
+{
+    node[shape=record]
+
+    customer [label="Customer" shape=box];
+    manager [label="Manager" shape=box];
+
+
+    subgraph cluster_level1
+    {
+        label ="Level 1";
+        process1 [label="{1.0 | One process here}" shape=Mrecord];
+        process2 [label="{ 2.0 | Other process here}" shape=Mrecord];
+        store1 [label="| Data store one"];
+        store2 [label="| Data store two"];
+        {rank=same; store1, store2}
+
+    }
+
+    customer -> process1
+    manager -> process2
+    store1 -> process1
+    store2 -> process2
+    process1 -> store2
+    store2 -> process1
+}

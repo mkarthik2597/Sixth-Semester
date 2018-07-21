@@ -1,0 +1,197 @@
+
+
+def str_to_bin(string):
+    """ Take a string and return a binary representation of the string based
+        upon the ASCII values of each character """
+    # Creates a list of elements. Here, the list consists of individual characters
+    ret = list(string)
+
+    # ord('x') converts 'x' to ASCII
+    # convert to binary representation. Each element is a 7-bit ASCII representation.
+
+    ret = ['{:07b}'.format(ord(x)) for x in ret]
+    # Each element now is a list of the 7-bit ASCII representation of each character
+    ret = [[bit for bit in x] for x in ret]
+    # Merge all the sublists to a single list. Meanwhile, convert each string to an integer
+    ret = [int(bit) for sublist in ret for bit in sublist]
+    return ret
+
+def bin_to_str(binary):
+    """ take a list of binary (integer ones and zeros) and return its ascii
+        string representation """
+    output = []
+    for i in range(int(floor(len(binary)/7))):
+        start = i * 7
+        # this is gross
+        char = binary[start:start+7]
+        char = '0b' + ''.join([str(c) for c in char])
+        output.append(int(char, 2))
+    #print output
+    st = ''.join([chr(o) for o in output if o != 0])
+    return str(st)
+
+def convert_msg(msg,k):
+    """ Takes a list of binary numbers and groups them into k bits per group """
+    while len(msg) % k != 0:
+        # pad the message to length
+        msg.append(0)
+    bin_strings = [msg[k*i:k*i+k] for i in range(len(msg)/k)]
+    return bin_strings
+
+def convert_lsb(lsb):
+    bin_strings = [lsb[5*i:5*i+5] for i in range(len(lsb)/5)]
+    return bin_strings
+
+def toDec(binary):
+    ans = 0
+    j = 0;
+    for i in reversed(binary):
+        ans += 2**j * i
+        j+=1
+    return ans
+
+def toBinary(decimal):
+    ret = []
+    while decimal >= 1:
+        ret.append(decimal % 2)
+        decimal = decimal / 2;
+
+    while len(ret)!=k:
+        ret.append(0)
+
+    return list(reversed(ret))
+
+script,infile,outfile=argv
+msg=open("../"+infile,"r").read()
+
+print "Reading message from input file..."
+raw_input()
+msg = str_to_bin(msg)
+print("")
+print("Message in binary:")
+print np.asarray(msg)
+print("")
+# Wait for user to enter a character
+len_msg_bits = len(msg)
+
+raw_input()
+print "Enter the number of LSBs to be substitued per pixel:",
+k = int(raw_input())
+print "Message grouped into %d bits:"%k
+print("")
+msg = convert_msg(msg,k)
+# Print the array with atmost 10 elements.
+print np.asarray(msg)
+raw_input()
+
+len_msg_bits = len(msg)*k
+# Open image using PIL and convert it into a numpy array. Each element of the array contains
+# the pixel intensity value
+CoverImage = Image.open("image.bmp")
+CoverImage = np.asarray(CoverImage)
+CoverImage.setflags(write=1)
+
+#create a copy of the image
+ReferenceImage = CoverImage.copy()
+ReferenceImage = ReferenceImage.flatten()
+
+# Without specifying vmin and vmax, plt.imshow auto-adjusts its range to the min and max of the data.
+plt.imshow(CoverImage,cmap='gray',vmin=0,vmax=255)
+# The title is displayed just on top of the image at the centre
+plt.title("Original Image")
+# Display the image
+plt.show()
+print("")
+
+H,W = CoverImage.shape
+TotalPixels = H * W;
+
+if(len(msg) > TotalPixels):
+    raise ValueError("Message too long to hide. Aborting....")
+
+print("Making the LSB substitutions ...")
+
+OPAPimage = ReferenceImage.copy()
+OPAPimage = OPAPimage.flatten()
+
+CoverImage = CoverImage.flatten()
+
+for i in range(len(msg)):
+    CoverImage[i] = CoverImage[i] - CoverImage[i] % 2**k + toDec(msg[i])
+    delta = int(CoverImage[i]) - int(ReferenceImage[i])
+
+    if (delta > 2**(k-1)) and (delta < 2**k):
+        if CoverImage[i] >= 2**k:
+            OPAPimage[i] = CoverImage[i] - 2**k
+        else:
+            OPAPimage[i] = CoverImage[i]
+
+    elif (delta >= -2**(k-1)) and (delta <= 2**(k-1)):
+        OPAPimage[i] = CoverImage[i]
+
+    elif (delta > -2**k) and (delta < -2**(k-1)):
+        if CoverImage[i] < 256 - 2**k:
+            OPAPimage[i] = CoverImage[i] + 2**k
+        else:
+            OPAPimage[i] = CoverImage[i]
+
+
+raw_input()
+CoverImage = CoverImage.reshape(H,W)
+new_img = Image.fromarray(CoverImage.reshape(H,W))
+new_img.save("LSB_image.bmp")
+
+OPAPimage = OPAPimage.reshape(H,W)
+new_img = Image.fromarray(OPAPimage.reshape(H,W))
+new_img.save("OPAP_image.bmp")
+
+plt.imshow(OPAPimage,cmap='gray',vmin=0,vmax=255)
+plt.title("Stego Image")
+plt.show()
+
+print("Extracting message:")
+
+
+
+RecoveredBits = []
+CoverImage = CoverImage.flatten()
+OPAPimage = OPAPimage.flatten()
+
+raw_input()
+
+for i in range(len(msg)):
+    # RecoveredBits.append(toBinary(CoverImage[i] % 2**k))
+    delta = int(CoverImage[i]) - int(ReferenceImage[i])
+
+    if (delta > 2**(k-1)) and (delta < 2**k) and CoverImage[i] >= 2**k:
+        RecoveredBits.append(toBinary((OPAPimage[i] + 2**k) % 2**k))
+
+    elif (delta > -2**k) and (delta < -2**(k-1)) and CoverImage[i] < 256 - 2**k:
+        RecoveredBits.append(toBinary((OPAPimage[i] - 2**k) % 2**k))
+
+    else:
+        RecoveredBits.append(toBinary(CoverImage[i] % 2**k))
+
+RecoveredBits = [j for i in RecoveredBits for j in i]
+
+RecoveredMessage = bin_to_str(RecoveredBits)
+print("")
+
+print "Writing to output file..."
+raw_input()
+open("../"+outfile,"w").write(RecoveredMessage)
+
+OPAPimgTemp = OPAPimage.astype(np.int16)
+ReferenceImgTemp = ReferenceImage.astype(np.int16)
+print("Running calculations...")
+
+change = OPAPimgTemp - ReferenceImgTemp
+mean_sqr_error = np.sum((change)**2)/float(TotalPixels)
+PSNR = 10*np.log10(TotalPixels/mean_sqr_error)
+embedding_rate = float(len_msg_bits)/TotalPixels
+non_zero = np.count_nonzero(change)
+change_density = float(non_zero)*100/ TotalPixels
+raw_input()
+print "{:25}".format("PSNR"), PSNR
+print "{:25}".format("Embedding Rate"), embedding_rate
+print "{:25} {}%".format("Change Density",change_density)

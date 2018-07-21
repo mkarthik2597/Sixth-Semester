@@ -1,0 +1,26 @@
+digraph Data_Flow_Diagram
+{
+    node[shape=rectangle,fontsize=28];
+    HP[label="Human Player",fontsize=35];
+    Board[label="board",fontsize=35];
+
+    node[shape=circle,fontsize=28];
+    0[label="Tic-tac-toe software\n(0)"];
+    0.1[label="display board\n(0.1)"];
+    0.2[label="validate move\n(0.2)"];
+    0.3[label="play move\n(0.3)"];
+    0.4[label="check winner\n(0.4)"];
+
+    node[style=invis,fontsize=28];
+    a,b,c;
+
+    0->HP;
+    HP->0;
+    Board->{0.1,0.4};
+    0.3->Board;
+    0.2->Board;
+    // Hp->;
+    0.4->a[label="result",fontsize=28];
+    0.1->b[label="game",fontsize=28];
+    c->0.2[label="move",fontsize=28];
+}

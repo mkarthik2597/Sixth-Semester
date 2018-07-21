@@ -1,0 +1,51 @@
+---------------------------------------------------
+    Author                        Email
+---------------------------------------------------
+Shashidhar G Koolagudi    koolagudi@nitk.edu.in
+Karthik M                 mkarthik2597@gmail.com
+Aswin Manoj P             aswin6197@gmail.com
+Pushpita Patil            patilpushpita@gmail.com
+C Aishwarya               haygriaishu02@gmail.com
+
+---------------------------------------------------
+
+Directory Contents
+
+Folders
+
+1) CoverImages: Contains the 9 standard test images
+2) StegoImages: Contains the stego images which are outputted here by the stego algorithms
+3) RandomImages: A collection of about 468 random images used for testing
+4) RandomImageTesting: Contains python files for testing on random images.
+
+                       Execution:
+                       1) python hamming\ test.py to test for (5,3) Hamming Code
+                       2) python hamming_pvd\ test.py to test for Hamming PVD algorithm
+                          Note: 2 sets of range intervals are used for testing as mentioned in the paper
+                                You can choose the range interval by uncommenting that particular range interval
+
+5) Hamming (5,3): Contains a single file Hamming.py
+
+                  Execution:
+                  1) python hamming.py <std_image_name>
+                     Eg: python hamming.py barbara
+
+                  The execution shows the step-by-step process. Press the 'Enter' key whenever you want to continue execution
+
+6) Hamming PVD:   Contains the code for executing the Hammming PVD algorithm
+                  The main file to execute is HammingPVD.py. The others are just helper files
+
+                  Execution:
+                  1) python HammingPVD.py <std_image_name>
+                     Eg: python HammingPVD.py lena
+
+                     Note: 2 sets of range intervals are used for testing as mentioned in the paper
+                           You can choose the range interval by uncommenting that particular range interval
+
+
+Files
+1) Random Image Testing Results: A PDF file showing the results of random images testing
+2) Standard Image Testing Results: A PDF file showing the results of standard images testing
+3) input.txt: A text file contain the secret message to be hidden in the cover images
+4) output.txt: A text file generated after successful decoding of the message from the stego image
+5) Hamming PVD Paper: A PDF file of the Hamming PVD paper

@@ -1,0 +1,18 @@
+digraph flow_chart
+{
+    node [shape = oval] start end exit
+
+    node [shape = parallelogram; label="Read Input"]; input;
+    node [shape = parallelogram; label="Print Output"]; output;
+    node [shape = diamond; label="Condition?"]; condition;
+    node [shape = box; label="Initialize\nCode"]; init_process;
+
+
+    start -> init_process;
+    init_process -> input
+    {rank = same; condition -> exit[label="No"]}
+
+    input -> condition;
+    condition -> output [label = "Yes"]
+    output -> end
+}

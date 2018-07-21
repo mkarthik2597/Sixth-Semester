@@ -1,0 +1,19 @@
+digraph B_Tree
+{
+    node [shape=record];
+
+    node0 [label = "<l> | <m> A | <r>"];
+    node1 [label = "<l> | <m> B | <r>"];
+    node2 [label = "<l> | <m> C | <r>"];
+    node3 [label = "<l> | <m> D | <r>"];
+    node4 [label = "<l> | <m> E | <r>"];
+    node5 [label = "<l> | <m> F | <r>"];
+    node6 [label = "<l> | <m> G | <r>"];
+
+    node0:l -> node1:m;
+    node0:r -> node2:m;
+    node1:l -> node3:m;
+    node1:r -> node4:m;
+    node2:l -> node5:m;
+    node2:r -> node6:m;
+}

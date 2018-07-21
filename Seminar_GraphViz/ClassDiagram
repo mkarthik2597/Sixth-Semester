@@ -1,0 +1,41 @@
+digraph ClassDiagram
+{
+    node [shape = "record"]
+    edge [arrowtail = "empty"]
+
+    Vehicle
+    [
+        label = "{Vehicle|name : string\l regd no : string\l | ship(): boolean\l}"
+    ]
+
+    Two_Wheeler
+    [
+        label = "{Two_Wheeler|\l|ship(): boolean\l}"
+    ]
+
+    Three_Wheeler
+    [
+        label = "{Three_Wheeler|\l|ship(): boolean\l}"
+    ]
+
+    Four_Wheeler
+    [
+        label = "{Four_Wheeler|\l|ship(): boolean\l}"
+    ]
+
+    Bicycle
+    [
+        label = "{Bicycle|\l|ship(): boolean\l}"
+    ]
+
+    MotorBike
+    [
+        label = "{MotorBike|\l|ship(): boolean\l}"
+    ]
+
+    Vehicle -> Three_Wheeler [dir=back]
+    Vehicle -> Two_Wheeler [dir=back]
+    Vehicle -> Four_Wheeler [dir=back]
+    Two_Wheeler -> Bicycle [dir=back]
+    Two_Wheeler -> MotorBike [dir=back]
+}

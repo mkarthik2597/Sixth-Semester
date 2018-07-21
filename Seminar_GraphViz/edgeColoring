@@ -1,0 +1,9 @@
+digraph shortest_path_weighted_graph
+{
+    a->b[label="1",color="red",penwidth=3];
+    b->c[label="5",color="red",penwidth=3];
+    c->d[label="2"];
+    a->d[label="4"];
+    d->b[label="-2"];
+    c->a[label="3"];
+}

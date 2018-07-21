@@ -1,0 +1,6 @@
+[submodule "Climate_Prediction"]
+	path = Climate_Prediction
+	url = https://github.com/Tarun-Karthik/Climate_Prediction
+[submodule "mini-c-compiler"]
+	path = mini-c-compiler
+	url = https://github.com/kaushiksk/mini-c-compiler
